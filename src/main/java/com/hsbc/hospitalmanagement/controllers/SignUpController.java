@@ -25,6 +25,7 @@ public class SignUpController {
     }
     @PostMapping("/save")
     public String saveEmployee(@ModelAttribute("employeeRequest") EmployeeRequest employeeRequest,Model model){
+        System.out.println(employeeRequest.getDob());
         if(employeeRequest.getFirstName().length()>0) {
             return "signin.html";
         }
