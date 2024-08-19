@@ -2,8 +2,10 @@ package com.hsbc.hospitalmanagement.services;
 
 import com.hsbc.hospitalmanagement.dtos.EmployeeRequest;
 import com.hsbc.hospitalmanagement.models.Employee;
+import com.hsbc.hospitalmanagement.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -17,17 +19,23 @@ public class EmployeeServiceImpl implements EmployeeService{
     private String addPersonQuery;
     @Value("${addEmployee}")
     private String addEmployeeQuery;
+    @Value("${getperson}")
+    private String getPersonQuery;
 
     @Override
     public boolean addEmployee(EmployeeRequest employeeRequest) {
-        jdbcTemplate.update(addPersonQuery,new Object[] {
+        int rows =jdbcTemplate.update(addPersonQuery,new Object[] {
                 employeeRequest.getFirstName(),
                 employeeRequest.getMiddleName(),
                 employeeRequest.getLastName(),
                Date.valueOf(employeeRequest.getDob())
 
         });
-        return true;
+        if(rows>0){
+            return true;
+        }
+        else
+        return false;
     }
 
     @Override
@@ -48,5 +56,12 @@ public class EmployeeServiceImpl implements EmployeeService{
     @Override
     public boolean deleteEmployee(long employeeCode) {
         return false;
+    }
+
+    @Override
+    public Person getPerson(String firstName, String lastName, String dob) {
+        jdbcTemplate.update(getPersonQuery, new Object[]{firstName, lastName, Date.valueOf(dob)},
+        BeanPropertyRowMapper.newInstance(Person.class));
+        return null;
     }
 }

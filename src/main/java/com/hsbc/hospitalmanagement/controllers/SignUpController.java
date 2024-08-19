@@ -2,6 +2,7 @@ package com.hsbc.hospitalmanagement.controllers;
 
 import com.hsbc.hospitalmanagement.dtos.EmployeeRequest;
 import com.hsbc.hospitalmanagement.services.CountryService;
+import com.hsbc.hospitalmanagement.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,8 @@ import java.util.List;
 public class SignUpController {
     @Autowired
     private CountryService countryService;
+    @Autowired
+    private EmployeeService employeeService;
 
     @GetMapping("/signup")
     public String loadSignUp(Model model) throws NoSuchFieldException, IllegalAccessException {
@@ -25,8 +28,8 @@ public class SignUpController {
     }
     @PostMapping("/save")
     public String saveEmployee(@ModelAttribute("employeeRequest") EmployeeRequest employeeRequest,Model model){
-        System.out.println(employeeRequest.getDob());
         if(employeeRequest.getFirstName().length()>0) {
+            employeeService.addEmployee(employeeRequest);
             return "signin.html";
         }
             else {
